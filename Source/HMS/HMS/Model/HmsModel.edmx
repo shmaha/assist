@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="HMSModelContext.Store" Provider="System.Data.SQLite.EF6" ProviderManifestToken="data source=&quot;D:\Trainings\Xamarin UI Test\Personal\HMS\HMS\Database\HMS.sqlite&quot;" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'main.Consultant' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Consultant">
+          <Key>
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="MCI" />
+          </Key>
+          <Property Name="Name" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="MCI" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Drug">
+          <Key>
+            <PropertyRef Name="DrugName" />
+            <PropertyRef Name="Brand" />
+          </Key>
+          <Property Name="DrugName" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="DrugForm" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Brand" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="GenericName" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Route" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Frequency" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="Days" Type="integer" />
+        </EntityType>
+        <EntityType Name="Patient">
+          <Key>
+            <PropertyRef Name="RegNo" />
+          </Key>
+          <Property Name="RegNo" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="Gender" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="DoB" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Age" Type="integer" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Address" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Village" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="Consultant" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Fee" Type="integer" />
+        </EntityType>
+        <EntityContainer Name="HMSModelContextStoreContainer">
+          <EntitySet Name="Drug" EntityType="Self.Drug" store:Type="Tables" />
+          <EntitySet Name="Patient" EntityType="Self.Patient" store:Type="Tables" />
+          <EntitySet Name="Consultant" EntityType="Self.Consultant" store:Type="Tables">
+            <DefiningQuery>SELECT 
+[Consultant].[Name] AS [Name], 
+[Consultant].[MCI] AS [MCI]
+FROM [Consultant] AS [Consultant]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="HMSModelContext" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Drug">
+          <Key>
+            <PropertyRef Name="DrugName" />
+            <PropertyRef Name="Brand" />
+          </Key>
+          <Property Name="DrugName" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DrugForm" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Brand" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="GenericName" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Route" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Frequency" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Days" Type="Int64" />
+        </EntityType>
+        <EntityType Name="Patient">
+          <Key>
+            <PropertyRef Name="RegNo" />
+          </Key>
+          <Property Name="RegNo" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Gender" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="DoB" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Age" Type="Int64" />
+          <Property Name="Phone" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Village" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Consultant" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Fee" Type="Int64" />
+        </EntityType>
+        <EntityType Name="Consultant">
+          <Key>
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="MCI" />
+          </Key>
+          <Property Name="Name" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MCI" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="HMSEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Drugs" EntityType="Self.Drug" />
+          <EntitySet Name="Patients" EntityType="Self.Patient" />
+          <EntitySet Name="Consultants" EntityType="Self.Consultant" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="HMSModelContextStoreContainer" CdmEntityContainer="HMSEntities">
+          <EntitySetMapping Name="Drugs">
+            <EntityTypeMapping TypeName="HMSModelContext.Drug">
+              <MappingFragment StoreEntitySet="Drug">
+                <ScalarProperty Name="DrugName" ColumnName="DrugName" />
+                <ScalarProperty Name="DrugForm" ColumnName="DrugForm" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
+                <ScalarProperty Name="GenericName" ColumnName="GenericName" />
+                <ScalarProperty Name="Route" ColumnName="Route" />
+                <ScalarProperty Name="Frequency" ColumnName="Frequency" />
+                <ScalarProperty Name="Days" ColumnName="Days" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Patients">
+            <EntityTypeMapping TypeName="HMSModelContext.Patient">
+              <MappingFragment StoreEntitySet="Patient">
+                <ScalarProperty Name="RegNo" ColumnName="RegNo" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="DoB" ColumnName="DoB" />
+                <ScalarProperty Name="Age" ColumnName="Age" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Village" ColumnName="Village" />
+                <ScalarProperty Name="Consultant" ColumnName="Consultant" />
+                <ScalarProperty Name="Fee" ColumnName="Fee" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Consultants">
+            <EntityTypeMapping TypeName="HMSModelContext.Consultant">
+              <MappingFragment StoreEntitySet="Consultant">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="MCI" ColumnName="MCI" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
