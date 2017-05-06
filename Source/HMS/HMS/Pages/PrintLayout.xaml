@@ -16,8 +16,8 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <TextBlock x:Name="ConsultantName" FontSize="18" Text="Dr. Doctor" HorizontalAlignment="Center" Grid.Row="0"/>
-            <TextBlock x:Name="ConsultantNo" FontSize="14" Text="MCI No: 1234" HorizontalAlignment="Center" Grid.Row="1"/>
+            <TextBlock x:Name="ConsultantName" FontSize="18" HorizontalAlignment="Center" Grid.Row="0"/>
+            <TextBlock x:Name="ConsultantNo" FontSize="14" HorizontalAlignment="Center" Grid.Row="1"/>
         </Grid>
     </StackPanel>
 </Page>

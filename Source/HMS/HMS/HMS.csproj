@@ -106,30 +106,34 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Model\Consultant.cs">
-      <DependentUpon>HmsModel.tt</DependentUpon>
+    <Compile Include="DataAccess\ConsultantDataAccess.cs" />
+    <Compile Include="DataAccess\DrugDataAccess.cs" />
+    <Compile Include="DataAccess\PatientDataAccess.cs" />
+    <Compile Include="Entity\Consultant.cs">
+      <DependentUpon>HMSEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\Drug.cs">
-      <DependentUpon>HmsModel.tt</DependentUpon>
+    <Compile Include="Entity\Drug.cs">
+      <DependentUpon>HMSEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\HmsModel.Context.cs">
+    <Compile Include="Entity\HMSEntities.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>HmsModel.Context.tt</DependentUpon>
+      <DependentUpon>HMSEntities.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\HmsModel.cs">
+    <Compile Include="Entity\HMSEntities.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>HmsModel.tt</DependentUpon>
+      <DependentUpon>HMSEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\HmsModel.Designer.cs">
+    <Compile Include="Entity\HMSEntities.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>HmsModel.edmx</DependentUpon>
+      <DependentUpon>HMSEntities.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Model\Patient.cs">
-      <DependentUpon>HmsModel.tt</DependentUpon>
+    <Compile Include="Entity\Patient.cs">
+      <DependentUpon>HMSEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\UIHelp.cs" />
     <Compile Include="Pages\PrintLayout.xaml.cs">
       <DependentUpon>PrintLayout.xaml</DependentUpon>
     </Compile>
@@ -148,8 +152,6 @@
     <Compile Include="Enums\DrugForm.cs" />
     <Compile Include="Enums\DrugFrequency.cs" />
     <Compile Include="Enums\DrugRoute.cs" />
-    <Compile Include="Models\Drug.cs" />
-    <Compile Include="Models\Patient.cs" />
     <Compile Include="Pages\Home.xaml.cs">
       <DependentUpon>Home.xaml</DependentUpon>
     </Compile>
@@ -169,6 +171,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\UserControls\Footer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\UserControls\Header.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\WritePrescription.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -180,6 +190,12 @@
     </Compile>
     <Compile Include="Pages\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\UserControls\Footer.xaml.cs">
+      <DependentUpon>Footer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\UserControls\Header.xaml.cs">
+      <DependentUpon>Header.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\WritePrescription.xaml.cs">
       <DependentUpon>WritePrescription.xaml</DependentUpon>
@@ -201,13 +217,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EntityDeploy Include="Model\HmsModel.edmx">
+    <EntityDeploy Include="Entity\HMSEntities.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>HmsModel.Designer.cs</LastGenOutput>
+      <LastGenOutput>HMSEntities.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="Model\HmsModel.edmx.diagram">
-      <DependentUpon>HmsModel.edmx</DependentUpon>
+    <None Include="Entity\HMSEntities.edmx.diagram">
+      <DependentUpon>HMSEntities.edmx</DependentUpon>
     </None>
+    <None Include="HMS.db" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -219,19 +236,22 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Model\HmsModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>HmsModel.edmx</DependentUpon>
-      <LastGenOutput>HmsModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Model\HmsModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>HmsModel.edmx</DependentUpon>
-      <LastGenOutput>HmsModel.cs</LastGenOutput>
-    </Content>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Folder Include="Database\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Entity\HMSEntities.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>HMSEntities.edmx</DependentUpon>
+      <LastGenOutput>HMSEntities.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Entity\HMSEntities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>HMSEntities.edmx</DependentUpon>
+      <LastGenOutput>HMSEntities.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.105.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.105.0\build\net451\System.Data.SQLite.Core.targets')" />

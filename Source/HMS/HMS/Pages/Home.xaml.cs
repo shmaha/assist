@@ -1,6 +1,8 @@
-﻿using HMS.Model;
+﻿using HMS.DataAccess;
+using HMS.Entity;
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -25,11 +27,6 @@ namespace HMS.Pages
         public Home()
         {
             InitializeComponent();
-            using (var db = new HMSEntities())
-            {
-                var list = db.Consultants.ToList();
-                this.BtnSettings.Content = list.First().Name;
-            }
         }
 
         private void BtnRegister_Click(object sender, RoutedEventArgs e)
@@ -41,9 +38,9 @@ namespace HMS.Pages
 
         private void BtnPrescription_Click(object sender, RoutedEventArgs e)
         {
-            Uri navUri = new Uri(@"Pages\WritePrescription.xaml", UriKind.Relative);
+            //Uri navUri = new Uri(@"Pages\WritePrescription.xaml", UriKind.Relative);
             Trace.WriteLine("Navigating to WritePrescription");
-            this.NavigationService.Navigate(navUri);
+            this.NavigationService.Navigate(new WritePrescription(null));
         }
 
         private void BtnSettings_Click(object sender, RoutedEventArgs e)

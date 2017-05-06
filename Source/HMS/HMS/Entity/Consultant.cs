@@ -7,22 +7,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace HMS.Model
+namespace HMS.Entity
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Patient
+    public partial class Consultant
     {
-        public long RegNo { get; set; }
         public string Name { get; set; }
-        public string Gender { get; set; }
-        public string DoB { get; set; }
-        public Nullable<long> Age { get; set; }
-        public string Phone { get; set; }
-        public string Address { get; set; }
-        public string Village { get; set; }
-        public string Consultant { get; set; }
+        public string MCI { get; set; }
         public Nullable<long> Fee { get; set; }
+        public Nullable<long> Default { get; set; }
     }
 }

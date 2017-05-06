@@ -4,16 +4,15 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="HMSModelContext.Store" Provider="System.Data.SQLite.EF6" ProviderManifestToken="data source=&quot;D:\Trainings\Xamarin UI Test\Personal\HMS\HMS\Database\HMS.sqlite&quot;" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'main.Consultant' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+    <Schema Namespace="HMSModel.Store" Provider="System.Data.SQLite.EF6" ProviderManifestToken="data source=&quot;D:\Trainings\Xamarin UI Test\Personal\HMS\HMS\HMS.db&quot;" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Consultant">
           <Key>
-            <PropertyRef Name="Name" />
             <PropertyRef Name="MCI" />
           </Key>
           <Property Name="Name" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
           <Property Name="MCI" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="Fee" Type="integer" />
+          <Property Name="Default" Type="integer" />
         </EntityType>
         <EntityType Name="Drug">
           <Key>
@@ -26,7 +25,7 @@ warning 6002: The table/view 'main.Consultant' does not have a primary key defin
           <Property Name="GenericName" Type="nvarchar" MaxLength="2147483647" />
           <Property Name="Route" Type="nvarchar" MaxLength="2147483647" />
           <Property Name="Frequency" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
-          <Property Name="Days" Type="integer" />
+          <Property Name="Days" Type="integer" Nullable="false" />
         </EntityType>
         <EntityType Name="Patient">
           <Key>
@@ -39,24 +38,27 @@ warning 6002: The table/view 'main.Consultant' does not have a primary key defin
           <Property Name="Age" Type="integer" />
           <Property Name="Phone" Type="nvarchar" MaxLength="2147483647" />
           <Property Name="Address" Type="nvarchar" MaxLength="2147483647" />
-          <Property Name="Village" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="Village" Type="nvarchar" MaxLength="2147483647" />
           <Property Name="Consultant" Type="nvarchar" MaxLength="2147483647" />
-          <Property Name="Fee" Type="integer" />
         </EntityType>
-        <EntityContainer Name="HMSModelContextStoreContainer">
+        <EntityContainer Name="HMSModelStoreContainer">
+          <EntitySet Name="Consultant" EntityType="Self.Consultant" store:Type="Tables" />
           <EntitySet Name="Drug" EntityType="Self.Drug" store:Type="Tables" />
           <EntitySet Name="Patient" EntityType="Self.Patient" store:Type="Tables" />
-          <EntitySet Name="Consultant" EntityType="Self.Consultant" store:Type="Tables">
-            <DefiningQuery>SELECT 
-[Consultant].[Name] AS [Name], 
-[Consultant].[MCI] AS [MCI]
-FROM [Consultant] AS [Consultant]</DefiningQuery>
-          </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="HMSModelContext" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="HMSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Consultant">
+          <Key>
+            <PropertyRef Name="MCI" />
+          </Key>
+          <Property Name="Name" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MCI" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Fee" Type="Int64" />
+          <Property Name="Default" Type="Int64" />
+        </EntityType>
         <EntityType Name="Drug">
           <Key>
             <PropertyRef Name="DrugName" />
@@ -68,7 +70,7 @@ FROM [Consultant] AS [Consultant]</DefiningQuery>
           <Property Name="GenericName" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
           <Property Name="Route" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
           <Property Name="Frequency" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Days" Type="Int64" />
+          <Property Name="Days" Type="Int64" Nullable="false" />
         </EntityType>
         <EntityType Name="Patient">
           <Key>
@@ -83,29 +85,30 @@ FROM [Consultant] AS [Consultant]</DefiningQuery>
           <Property Name="Address" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
           <Property Name="Village" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Consultant" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
-          <Property Name="Fee" Type="Int64" />
         </EntityType>
-        <EntityType Name="Consultant">
-          <Key>
-            <PropertyRef Name="Name" />
-            <PropertyRef Name="MCI" />
-          </Key>
-          <Property Name="Name" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="MCI" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
-        </EntityType>
-        <EntityContainer Name="HMSEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Consultants" EntityType="Self.Consultant" />
           <EntitySet Name="Drugs" EntityType="Self.Drug" />
           <EntitySet Name="Patients" EntityType="Self.Patient" />
-          <EntitySet Name="Consultants" EntityType="Self.Consultant" />
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="HMSModelContextStoreContainer" CdmEntityContainer="HMSEntities">
+        <EntityContainerMapping StorageEntityContainer="HMSModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="Consultants">
+            <EntityTypeMapping TypeName="HMSModel.Consultant">
+              <MappingFragment StoreEntitySet="Consultant">
+                <ScalarProperty Name="Default" ColumnName="Default" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="MCI" ColumnName="MCI" />
+                <ScalarProperty Name="Fee" ColumnName="Fee" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Drugs">
-            <EntityTypeMapping TypeName="HMSModelContext.Drug">
+            <EntityTypeMapping TypeName="HMSModel.Drug">
               <MappingFragment StoreEntitySet="Drug">
                 <ScalarProperty Name="DrugName" ColumnName="DrugName" />
                 <ScalarProperty Name="DrugForm" ColumnName="DrugForm" />
@@ -118,7 +121,7 @@ FROM [Consultant] AS [Consultant]</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Patients">
-            <EntityTypeMapping TypeName="HMSModelContext.Patient">
+            <EntityTypeMapping TypeName="HMSModel.Patient">
               <MappingFragment StoreEntitySet="Patient">
                 <ScalarProperty Name="RegNo" ColumnName="RegNo" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -129,15 +132,6 @@ FROM [Consultant] AS [Consultant]</DefiningQuery>
                 <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="Village" ColumnName="Village" />
                 <ScalarProperty Name="Consultant" ColumnName="Consultant" />
-                <ScalarProperty Name="Fee" ColumnName="Fee" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Consultants">
-            <EntityTypeMapping TypeName="HMSModelContext.Consultant">
-              <MappingFragment StoreEntitySet="Consultant">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="MCI" ColumnName="MCI" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
