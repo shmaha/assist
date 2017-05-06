@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace HMS.Model
+namespace HMS.Entity
 {
     using System;
     using System.Collections.Generic;
@@ -20,6 +20,6 @@ namespace HMS.Model
         public string GenericName { get; set; }
         public string Route { get; set; }
         public string Frequency { get; set; }
-        public Nullable<long> Days { get; set; }
+        public long Days { get; set; }
     }
 }

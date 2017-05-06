@@ -13,10 +13,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using HMS.Model;
+using HMS.Entity;
 using HMS.Enums;
+using HMS.Helpers;
 
 using System.Diagnostics;
+using HMS.DataAccess;
 
 namespace HMS.Pages
 {
@@ -25,8 +27,11 @@ namespace HMS.Pages
     /// </summary>
     public partial class WritePrescription : Page
     {
-        public List<Drug> test;
-        public List<string> display;
+        private List<Drug> drugs = new List<Drug>();
+        private List<string> display;
+        private DrugDataAccess _drugDA;
+        private ConsultantDataAccess _consultantDA;
+        private Patient patient;
         #region variables
         public ComboBox drugForm;
         public ComboBox drugRoute;
@@ -35,27 +40,31 @@ namespace HMS.Pages
         public TextBox drugBrand;
         public TextBox drugGeneric;
         public Button btnDone;
+        public TextBox drugDays;
         #endregion
-        public WritePrescription()
+        public WritePrescription(Patient patient)
         {
             InitializeComponent();
+            _drugDA = new DrugDataAccess();
+            _consultantDA = new ConsultantDataAccess();
             display = new List<string>();
-            #region Temp
-            List<string> drugName = new List<string>();
+            drugs = _drugDA.GetAll();
+            this.patient = patient;
             
-            test = new List<Drug>();
-            test.Add(new Drug() { DrugName = "Freeze DSR", DrugForm = "Cap", Brand = "One Pharma", Route = "Orally", Frequency = "OD", GenericName = "PANTAPRAZOLE 30MG SUSTAINED RELEASE" });
-            test.Add(new Drug() { DrugName = "Comfy", DrugForm = "Tab", Brand = "One Pharma", Route = "Orally", Frequency = "BD", GenericName = "ACECLOFENAC 100MG + PARACETAMOL 350 MG" });
-            test.Add(new Drug() { DrugName = "comfy2", DrugForm = "Tab", Brand = "One Pharma", Route = "Orally", Frequency = "BD", GenericName = "ACECLOFENAC 100MG + PARACETAMOL 350 MG" });
-            test.Add(new Drug() { DrugName = "Comfy3", DrugForm = "Tab", Brand = "One Pharma", Route = "Orally", Frequency = "BD", GenericName = "ACECLOFENAC 100MG + PARACETAMOL 350 MG" });
-            #endregion
-            //test = new DataRepository<Drug>().GetAll().ToList();
-
-            foreach (var t in test)
+            // Set patient data grid if present
+            if (this.patient != null)
             {
-                drugName.Add(t.DrugName);
+                PatientDetails.Visibility = Visibility.Visible;
+                TxtPatientName.Text = patient.Name;
+                TxtPatientAge.Text = patient.Age.ToString();
+                TxtPatientContact.Text = patient.Phone;
+                TxtPatientGender.Text = patient.Gender;
             }
-            //this.ComboList.ItemsSource = drugName;
+            else
+            {
+                PatientDetails.Visibility = Visibility.Collapsed;
+                
+            }
         }
                 
         private void TxtSearch_TextChanged(object sender, TextChangedEventArgs e)
@@ -64,7 +73,7 @@ namespace HMS.Pages
             List<string> autoSuggest = new List<string>();
             autoSuggest.Clear();
 
-            foreach (var item in test)
+            foreach (var item in drugs)
             {
                 if(!string.IsNullOrEmpty(TxtSearch.Text))
                 {
@@ -110,11 +119,11 @@ namespace HMS.Pages
                     if (ChkGeneric.IsChecked == false)
                     {
                         // get the object in question
-                        obj = test.Where(x => x.DrugName == TxtSearch.Text).FirstOrDefault();
+                        obj = drugs.Where(x => x.DrugName == TxtSearch.Text).FirstOrDefault();
                     }
                     else
                     {
-                        obj = test.Where(x => x.GenericName == TxtSearch.Text).FirstOrDefault();
+                        obj = drugs.Where(x => x.GenericName == TxtSearch.Text).FirstOrDefault();
                     }
                     DisplayUI(obj);
                 }
@@ -165,32 +174,58 @@ namespace HMS.Pages
             drugFrequency.HorizontalAlignment = HorizontalAlignment.Center;
             drugFrequency.VerticalAlignment = VerticalAlignment.Center;
             drugFrequency.TextWrapping = TextWrapping.Wrap;
+
+            TextBox drugDays = new TextBox();
+            drugDays.Text = obj.Days.ToString();
+            drugDays.HorizontalAlignment = HorizontalAlignment.Center;
+            drugDays.VerticalAlignment = VerticalAlignment.Center;
+            drugDays.TextWrapping = TextWrapping.Wrap;
+
+            Button btnDelete = new Button();
+            btnDelete.Content = "Delete";
+            btnDelete.Click += BtnDelete_Click;
+            btnDelete.HorizontalAlignment = HorizontalAlignment.Center;
+
             #endregion
 
             #region Display elements
-            this.TbPrescription.Children.Add(drugForm);
-            Grid.SetRow(drugForm, TbPrescription.RowDefinitions.Count() - 1);
-            Grid.SetColumn(drugForm, 0);
+            var ui = new UIHelp();
+            ui.DisplayUIElementInColoumn(TbPrescription,drugForm, 0);
+            //this.TbPrescription.Children.Add(drugForm);
+            //Grid.SetRow(drugForm, TbPrescription.RowDefinitions.Count() - 1);
+            //Grid.SetColumn(drugForm, 0);
 
-            this.TbPrescription.Children.Add(drugName);
-            Grid.SetRow(drugName, TbPrescription.RowDefinitions.Count() - 1);
-            Grid.SetColumn(drugName, 1);
+            ui.DisplayUIElementInColoumn(TbPrescription, drugName, 1);
+            //this.TbPrescription.Children.Add(drugName);
+            //Grid.SetRow(drugName, TbPrescription.RowDefinitions.Count() - 1);
+            //Grid.SetColumn(drugName, 1);
 
-            this.TbPrescription.Children.Add(drugBrand);
-            Grid.SetRow(drugBrand, TbPrescription.RowDefinitions.Count() - 1);
-            Grid.SetColumn(drugBrand, 2);
+            ui.DisplayUIElementInColoumn(TbPrescription, drugBrand, 2);
+            //this.TbPrescription.Children.Add(drugBrand);
+            //Grid.SetRow(drugBrand, TbPrescription.RowDefinitions.Count() - 1);
+            //Grid.SetColumn(drugBrand, 2);
 
-            this.TbPrescription.Children.Add(drugGeneric);
-            Grid.SetRow(drugGeneric, TbPrescription.RowDefinitions.Count() - 1);
-            Grid.SetColumn(drugGeneric, 3);
+            ui.DisplayUIElementInColoumn(TbPrescription, drugGeneric, 3);
+            //this.TbPrescription.Children.Add(drugGeneric);
+            //Grid.SetRow(drugGeneric, TbPrescription.RowDefinitions.Count() - 1);
+            //Grid.SetColumn(drugGeneric, 3);
 
-            this.TbPrescription.Children.Add(drugRoute);
-            Grid.SetRow(drugRoute, TbPrescription.RowDefinitions.Count() - 1);
-            Grid.SetColumn(drugRoute, 4);
+            ui.DisplayUIElementInColoumn(TbPrescription, drugRoute, 4);
+            //this.TbPrescription.Children.Add(drugRoute);
+            //Grid.SetRow(drugRoute, TbPrescription.RowDefinitions.Count() - 1);
+            //Grid.SetColumn(drugRoute, 4);
 
-            this.TbPrescription.Children.Add(drugFrequency);
-            Grid.SetRow(drugFrequency, TbPrescription.RowDefinitions.Count() - 1);
-            Grid.SetColumn(drugFrequency, 5);
+            ui.DisplayUIElementInColoumn(TbPrescription, drugFrequency, 5);
+            //this.TbPrescription.Children.Add(drugFrequency);
+            //Grid.SetRow(drugFrequency, TbPrescription.RowDefinitions.Count() - 1);
+            //Grid.SetColumn(drugFrequency, 5);
+
+            ui.DisplayUIElementInColoumn(TbPrescription, drugDays, 6);
+            //this.TbPrescription.Children.Add(drugDays);
+            //Grid.SetRow(drugDays, TbPrescription.RowDefinitions.Count() - 1);
+            //Grid.SetColumn(drugDays, 6);
+
+            ui.DisplayUIElementInColoumn(TbPrescription, btnDelete, 7);
             #endregion
 
             // Add to display string
@@ -204,12 +239,42 @@ namespace HMS.Pages
                 default: break;
             }
 
-            string displayCurrent = drugForm.Text +". " + drugName.Text +" ("+drugBrand.Text+") "+drugRoute.Text+" "+drugFrequency.Text+ ";(" + drugGeneric.Text+") " + displayFreq;
+            string displayCurrent = drugForm.Text +". " + drugName.Text +" ("+drugBrand.Text+") "+drugRoute.Text+" "+drugFrequency.Text+ ";(" + drugGeneric.Text+") " + displayFreq + " for " + drugDays.Text +" days";
             display.Add(displayCurrent);
 
             TxtSearch.Text = string.Empty;
         }
-    
+
+        private void BtnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            //int row = Grid.GetRow(e.Source as Button);
+            //int coloumn = Grid.GetColumn(e.Source as Button);
+
+            //Drug drug = new Drug();
+            //drug.DrugForm = drugForm.SelectedValue.ToString();
+            //drug.DrugName = drugName.Text[0].ToString().ToUpper() + drugName.Text.Substring(1);
+            //drug.Brand = drugBrand.Text[0].ToString().ToUpper() + drugBrand.Text.Substring(1);
+            //drug.GenericName = drugGeneric.Text.ToUpper();
+            //drug.Route = drugRoute.SelectedValue.ToString();
+            //drug.Frequency = drugFrequency.SelectedValue.ToString();
+            //drug.Days = Convert.ToInt32(drugDays.Text);
+
+            //// Add the object to db
+            //_drugDA.Delete(drug);
+            
+            //// Replace values that are visible
+            //TxtSearch.Text = drug.DrugName;
+            //this.TbPrescription.RowDefinitions.RemoveAt(row);
+            //this.drugName.Visibility = Visibility.Hidden;
+            //this.drugForm.Visibility = Visibility.Hidden;
+            //this.drugRoute.Visibility = Visibility.Hidden;
+            //this.drugFrequency.Visibility = Visibility.Hidden;
+            //this.drugBrand.Visibility = Visibility.Hidden;
+            //this.drugGeneric.Visibility = Visibility.Hidden;
+            //this.drugDays.Visibility = Visibility.Hidden;
+            //this.btnDone.Visibility = Visibility.Hidden;
+        }
+
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
             this.TbPrescription.RowDefinitions.Add(new RowDefinition());
@@ -246,41 +311,60 @@ namespace HMS.Pages
             drugFrequency.VerticalAlignment = VerticalAlignment.Center;
             drugFrequency.ItemsSource = Enum.GetValues(typeof(DrugFrequency));
 
+            drugDays = new TextBox();
+            drugDays.TextWrapping = TextWrapping.Wrap;
+            drugDays.HorizontalAlignment = HorizontalAlignment.Center;
+            drugDays.VerticalAlignment = VerticalAlignment.Center;
+
             btnDone = new Button();
             btnDone.Content = "Done";
             btnDone.Click += BtnDone_Click;
             btnDone.HorizontalAlignment = HorizontalAlignment.Center;
-            
+
             #endregion
 
             #region Display elements
-            this.TbPrescription.Children.Add(drugForm);
-            Grid.SetRow(drugForm, TbPrescription.RowDefinitions.Count() - 1);
-            Grid.SetColumn(drugForm, 0);
+            var ui = new UIHelp();
 
-            this.TbPrescription.Children.Add(drugName);
-            Grid.SetRow(drugName, TbPrescription.RowDefinitions.Count() - 1);
-            Grid.SetColumn(drugName, 1);
+            ui.DisplayUIElementInColoumn(TbPrescription, drugForm, 0);
+            //this.TbPrescription.Children.Add(drugForm);
+            //Grid.SetRow(drugForm, TbPrescription.RowDefinitions.Count() - 1);
+            //Grid.SetColumn(drugForm, 0);
 
-            this.TbPrescription.Children.Add(drugBrand);
-            Grid.SetRow(drugBrand, TbPrescription.RowDefinitions.Count() - 1);
-            Grid.SetColumn(drugBrand, 2);
+            ui.DisplayUIElementInColoumn(TbPrescription, drugName, 1);
+            //this.TbPrescription.Children.Add(drugName);
+            //Grid.SetRow(drugName, TbPrescription.RowDefinitions.Count() - 1);
+            //Grid.SetColumn(drugName, 1);
 
-            this.TbPrescription.Children.Add(drugGeneric);
-            Grid.SetRow(drugGeneric, TbPrescription.RowDefinitions.Count() - 1);
-            Grid.SetColumn(drugGeneric, 3);
+            ui.DisplayUIElementInColoumn(TbPrescription, drugBrand, 2);
+            //this.TbPrescription.Children.Add(drugBrand);
+            //Grid.SetRow(drugBrand, TbPrescription.RowDefinitions.Count() - 1);
+            //Grid.SetColumn(drugBrand, 2);
 
-            this.TbPrescription.Children.Add(drugRoute);
-            Grid.SetRow(drugRoute, TbPrescription.RowDefinitions.Count() - 1);
-            Grid.SetColumn(drugRoute, 4);
+            ui.DisplayUIElementInColoumn(TbPrescription, drugGeneric, 3);
+            //this.TbPrescription.Children.Add(drugGeneric);
+            //Grid.SetRow(drugGeneric, TbPrescription.RowDefinitions.Count() - 1);
+            //Grid.SetColumn(drugGeneric, 3);
 
-            this.TbPrescription.Children.Add(drugFrequency);
-            Grid.SetRow(drugFrequency, TbPrescription.RowDefinitions.Count() - 1);
-            Grid.SetColumn(drugFrequency, 5);
+            ui.DisplayUIElementInColoumn(TbPrescription, drugRoute, 4);
+            //this.TbPrescription.Children.Add(drugRoute);
+            //Grid.SetRow(drugRoute, TbPrescription.RowDefinitions.Count() - 1);
+            //Grid.SetColumn(drugRoute, 4);
 
-            this.TbPrescription.Children.Add(btnDone);
-            Grid.SetRow(btnDone, TbPrescription.RowDefinitions.Count() - 1);
-            Grid.SetColumn(btnDone, 6);
+            ui.DisplayUIElementInColoumn(TbPrescription, drugFrequency, 5);
+            //this.TbPrescription.Children.Add(drugFrequency);
+            //Grid.SetRow(drugFrequency, TbPrescription.RowDefinitions.Count() - 1);
+            //Grid.SetColumn(drugFrequency, 5);
+
+            ui.DisplayUIElementInColoumn(TbPrescription, drugDays, 6);
+            //this.TbPrescription.Children.Add(drugDays);
+            //Grid.SetRow(drugDays, TbPrescription.RowDefinitions.Count() - 1);
+            //Grid.SetColumn(drugDays, 6);
+
+            ui.DisplayUIElementInColoumn(TbPrescription, btnDone, 7);
+            //this.TbPrescription.Children.Add(btnDone);
+            //Grid.SetRow(btnDone, TbPrescription.RowDefinitions.Count() - 1);
+            //Grid.SetColumn(btnDone, 7);
             #endregion
         }
 
@@ -298,10 +382,11 @@ namespace HMS.Pages
             drug.GenericName = drugGeneric.Text.ToUpper();
             drug.Route = drugRoute.SelectedValue.ToString();
             drug.Frequency = drugFrequency.SelectedValue.ToString();
+            drug.Days = Convert.ToInt32(drugDays.Text);
 
             // Add the object to db
-
-            test.Add(drug);
+            _drugDA.Add(drug);
+            drugs = _drugDA.GetAll();
 
             // Replace values that are visible
             TxtSearch.Text = drug.DrugName;
@@ -312,16 +397,26 @@ namespace HMS.Pages
             this.drugFrequency.Visibility = Visibility.Hidden; 
             this.drugBrand.Visibility = Visibility.Hidden; 
             this.drugGeneric.Visibility = Visibility.Hidden;
+            this.drugDays.Visibility = Visibility.Hidden;
             this.btnDone.Visibility = Visibility.Hidden;
 
-            DisplayUI(test.Where(x => x.DrugName == TxtSearch.Text).FirstOrDefault());
+            DisplayUI(drugs.Where(x => x.DrugName == TxtSearch.Text).FirstOrDefault());
     }
 
         private void BtnPrint_Click(object sender, RoutedEventArgs e)
         {
             //Uri navUri = new Uri(@"Pages\PrintLayout.xaml", UriKind.Relative);
+            Consultant consultant;
+            if (this.patient != null)
+            {
+                consultant = _consultantDA.GetByMci(patient.Consultant);
+            }
+            else
+            {
+                consultant = _consultantDA.GetDefault();
+            }
             Trace.WriteLine("Navigating to PrintLayout");
-            this.NavigationService.Navigate(new PrintLayout(display));
+            this.NavigationService.Navigate(new PrintLayout(display,consultant));
         }
     }
 }

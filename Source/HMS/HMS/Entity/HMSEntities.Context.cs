@@ -7,16 +7,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace HMS.Model
+namespace HMS.Entity
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class HMSEntities : DbContext
+    public partial class Entities : DbContext
     {
-        public HMSEntities()
-            : base("name=HMSEntities")
+        public Entities()
+            : base("name=Entities")
         {
         }
     
@@ -25,8 +25,8 @@ namespace HMS.Model
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Consultant> Consultants { get; set; }
         public virtual DbSet<Drug> Drugs { get; set; }
         public virtual DbSet<Patient> Patients { get; set; }
-        public virtual DbSet<Consultant> Consultants { get; set; }
     }
 }

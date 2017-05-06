@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HMS.DataAccess;
+using HMS.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Printing;
@@ -21,9 +23,11 @@ namespace HMS.Pages
     /// </summary>
     public partial class PrintLayout : Page
     {
-        public PrintLayout(List<string> drugs)
+        private ConsultantDataAccess _consultantDA; 
+        public PrintLayout(List<string> drugs, Consultant consultant)
         {
             InitializeComponent();
+            _consultantDA = new ConsultantDataAccess();
             foreach (var drug in drugs)
             {
                 this.PrintGrid.RowDefinitions.Add(new RowDefinition());
@@ -56,6 +60,8 @@ namespace HMS.Pages
                 Grid.SetColumn(textGeneric, 0);
 
             }
+            ConsultantName.Text = "Dr. " + consultant.Name;
+            ConsultantNo.Text = "MCI No.: " + consultant.MCI;
             
             PrintPage();
         }
